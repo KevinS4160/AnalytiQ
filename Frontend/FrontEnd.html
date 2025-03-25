@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalytiQ - Smart Data Analyzer</title>
+    <style>
+        /* Dark Navy Blue Theme */
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #0a0f1a;
+            color: #e6edf3;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #121826;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
+            animation: slideIn 1s ease-in-out;
+        }
+        h1 {
+            color: #4ba3ff;
+            font-size: 26px;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        input, button, select {
+            margin: 10px;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+        input {
+            background: #1c2433;
+            color: #e6edf3;
+            width: 80%;
+            border: 1px solid #4ba3ff;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(75, 163, 255, 0.8);
+            transform: scale(1.05);
+        }
+        button {
+            background: #2979ff;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease-in-out;
+        }
+        button:hover {
+            background: #448aff;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(68, 138, 255, 0.8);
+        }
+        select {
+            background: #1c2433;
+            color: #e6edf3;
+            width: 85%;
+        }
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .upload-box {
+            border: 2px dashed #4ba3ff;
+            padding: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        .upload-box:hover {
+            background: rgba(75, 163, 255, 0.1);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(75, 163, 255, 0.8);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pulseGlow {
+            from { text-shadow: 0 0 10px rgba(75, 163, 255, 0.6); }
+            to { text-shadow: 0 0 20px rgba(75, 163, 255, 0.9); }
+        }
+        @keyframes floatUp {
+            from { transform: translateY(10px); }
+            to { transform: translateY(0); }
+        }
+        .interactive:hover {
+            animation: floatUp 0.4s alternate infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AnalytiQ - Smart Data Analyzer</h1>
+
+        <div class="upload-box" onclick="document.getElementById('fileInput').click();" 
+             ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+            <p>Drag & Drop File Here or Click to Select</p>
+            <input type="file" id="fileInput" accept=".csv, .json" style="display: none;">
+        </div>
+        <button onclick="uploadFile()">Upload</button>
+
+        <br>
+
+        <h3>Live Data Preview</h3>
+        <pre id="dataPreview">No file uploaded.</pre>
+
+        <select id="chartType">
+            <option value="heatmap">Heatmap</option>
+            <option value="histogram">Histogram</option>
+            <option value="scatter">3D Scatter Plot</option>
+            <option value="boxplot">Box Plot</option>
+            <option value="lineplot">Line Plot</option>
+            <option value="pairplot">Pair Plot</option>
+            <option value="barchart">Bar Chart</option>
+            <option value="density">Density Plot</option>
+        </select>
+
+        <input type="text" id="columnName" placeholder="Enter column(s) (comma-separated for some)">
+        <button onclick="generateVisualization()">Generate Visualization</button>
+
+        <div id="loading">
+            <p>Generating visualization...</p>
+            <div class="spinner"></div>
+        </div>
+
+        <br>
+
+        <img id="outputImage" src="" alt="Visualization will appear here">
+        <button id="downloadBtn" style="display: none;" onclick="downloadImage()">Download Visualization</button>
+    </div>
+    
+    <script>
+        let uploadedFilename = "";
+
+        async function uploadFile() {
+            const fileInput = document.getElementById("fileInput").files[0];
+            if (!fileInput) {
+                alert("Please select a file first.");
+                return;
+            }
+            const formData = new FormData();
+            formData.append("file", fileInput);
+
+            const response = await fetch("http://127.0.0.1:8000/upload/", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            uploadedFilename = result.filename;
+            alert("File uploaded successfully: " + uploadedFilename);
+            
+            // Fetch and display first few rows of data
+            previewData(fileInput);
+        }
+
+        function generateVisualization() {
+            if (!uploadedFilename) {
+                alert("Please upload a file first.");
+                return;
+            }
+            document.getElementById("loading").style.display = "block";
+            setTimeout(() => {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("outputImage").src = `http://127.0.0.1:8000/visualization/${uploadedFilename}/${document.getElementById("chartType").value}/${document.getElementById("columnName").value || "none"}`;
+                document.getElementById("outputImage").style.opacity = "1";
+                document.getElementById("downloadBtn").style.display = "block";
+            }, 1000);
+        }
+
+        function downloadImage() {
+            const link = document.createElement("a");
+            link.href = document.getElementById("outputImage").src;
+            link.download = "visualization.png";
+            link.click();
+        }
+
+        function previewData(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const lines = event.target.result.split("\n").slice(0, 5); // Show first 5 rows
+                document.getElementById("dataPreview").innerText = lines.join("\n");
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>

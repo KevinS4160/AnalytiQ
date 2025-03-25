@@ -1,0 +1,35 @@
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.log
+
+# Ignore Virtual Environment
+venv/
+env/
+.venv/
+
+# Ignore system files (Mac & Windows)
+.DS_Store
+Thumbs.db
+
+# Ignore IDE-specific files (VSCode, PyCharm, etc.)
+.vscode/
+.idea/
+*.swp
+
+# Ignore uploaded CSV/JSON files
+uploads/*.csv
+uploads/*.json
+
+# Ignore generated plots/images
+uploads/*.png
+
+# Ignore dependencies if using virtualenv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Ignore Jupyter Notebook checkpoints (if you use notebooks)
+.ipynb_checkpoints/
+
+# Ignore Postman files (if using Postman)
+postman_collection.json
