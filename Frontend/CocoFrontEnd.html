@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalytiQ - Smart Data Analyzer</title>
+    <style>
+        /* Dark Navy Blue Theme */
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #0a0f1a;
+            color: #e6edf3;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #121826;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
+            animation: slideIn 1s ease-in-out;
+        }
+        h1 {
+            color: #4ba3ff;
+            font-size: 26px;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        input, button, select {
+            margin: 12px 0;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+        input {
+            background: #1c2433;
+            color: #e6edf3;
+            width: 80%;
+            border: 1px solid #4ba3ff;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(75, 163, 255, 0.8);
+            transform: scale(1.05);
+        }
+        button {
+            background: #2979ff;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
+        }
+        button:hover {
+            background: #448aff;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(68, 138, 255, 0.8);
+        }
+        select {
+            background: #1c2433;
+            color: #e6edf3;
+            width: 85%;
+            border: 1px solid #4ba3ff;
+        }
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .upload-box {
+            border: 2px dashed #4ba3ff;
+            padding: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        .upload-box:hover {
+            background: rgba(75, 163, 255, 0.1);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(75, 163, 255, 0.8);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pulseGlow {
+            from { text-shadow: 0 0 10px rgba(75, 163, 255, 0.6); }
+            to { text-shadow: 0 0 20px rgba(75, 163, 255, 0.9); }
+        }
+        @keyframes floatUp {
+            from { transform: translateY(10px); }
+            to { transform: translateY(0); }
+        }
+        .interactive:hover {
+            animation: floatUp 0.4s alternate infinite ease-in-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+            input, button, select {
+                width: 100%;
+                margin: 8px 0;
+            }
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to AnalytiQ - Smart Data Analyzer</h1>
+        <input type="text" placeholder="Enter Data or File Path" />
+        <select>
+            <option value="">Choose a Data Set</option>
+            <option value="dataset1">Dataset 1</option>
+            <option value="dataset2">Dataset 2</option>
+        </select>
+        <button>Analyze</button>
+        <div class="upload-box">
+            <span>Upload Your File</span>
+        </div>
+        <img class="interactive" src="path/to/your/image.jpg" alt="Data Visualization" />
+    </div>
+</body>
+</html>
