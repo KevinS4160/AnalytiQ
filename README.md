@@ -105,6 +105,6 @@ Want to improve **AnalytiQ**? Contributions are welcome!
 
 ---
 
-## 📄 License
+## 📄 Licenses
 This project is licensed under the **MIT License**.
 
